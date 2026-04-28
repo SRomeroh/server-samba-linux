@@ -1,12 +1,15 @@
---Instalación y ejecución de la maquina virtual con QEMU/KVM--
+## Instalación y ejecución de la maquina virtual con QEMU/KVM
+
 
 Para comenzar creo el disco virtual que utilizaré con QEMU. Elijo del tipo QCOW2ya que es nativo de QEMU.
 
-Ejecuto los siguientes comandos:
+
+## Ejecuto los siguientes comandos:
 qemu-img create -f qcow2 debian-server.qcow2 20G
 Esto crea el disco virtual "debian-server" con formato qcow2 con 20gb disponibles que se iran usando a medida que lo precise.
 
-Lanzo por primera vez la maquina con estos comandos:
+
+## Lanzo por primera vez la maquina con estos comandos:
 qemu-system-x86_64 \
 -enable-kvm \ (Habilita KVM para que la virtualizacion se ejecute directamente en hardware)
 -cpu host \
@@ -20,9 +23,11 @@ qemu-system-x86_64 \
 > -vga virtio \ (Especifica el estandar de la pantalla)
 > -display gtk,zoom-to-fit=on. Luego de la instalación cambio a la opcion -display none. 
 
+
 (Para proximos despliegues esto queda hecho un script automatizado en la seccion scripts/)
 
-Particionamiento de debian:
+
+## Particionamiento de debian:
 /boot ext4 800MB
 El resto se particionó con LVM que nos permitirá agregar y redimenzionar las particiones:
 / 5GB
@@ -31,20 +36,29 @@ El resto se particionó con LVM que nos permitirá agregar y redimenzionar las p
 /tmp 2GB LVM ext4
 /swap 1GB LVM intercambio
 
+
 No se instaló entorno grafico para reducir el consumo de recursos.
 
---Instalación Samba--
 
-Instalo Samba.
+## Instalación Samba
+
+
+**Instalo Samba.**
 'sudo apt install samba'
 
-antes de configurar debo crear la carpeta donde se compartirán los recursos.
-'mkdir -p /srv/samba/compartido'
 
-debo configurar samba, edito el archivo /etc/samba/smb.conf // archivo completo en /configs/ //
+antes de configurar debo crear la carpeta donde se compartirán los recursos.
+**'mkdir -p /srv/samba/compartido'**, elegí /srv/ siguiendo el estandar **FHS** de linux.
+
+
+debo configurar samba, edito el archivo /etc/samba/smb.conf // archivo completo en /configs/
+
 
 seguido tengo que crear un usuario para poder autenticarme en samba:
 uso sudo smbpasswd -a debianserver y luego introduzco una contraseña.
 por ultimo reinicio el servicio con sudo /etc/init.d/smbd restart y ya puedo acceder al directorio compartido del servidor samba desde mi pc host conectandome a 127.0.0.1:4445 ( puerto especifico agregado para samba )
 
 
+## Grupo de acceso a samba
+* Se implementó un filtro de samba por grupo, es decir, cree un grupo llamado 'smb_access' y en el archivo smb.conf forcé para que solo se puedan autenticar los usuarios que sean parte de ese grupo.
+Creo varios usuarios y los agrego al grupo smb_access para probar funcionalidad.

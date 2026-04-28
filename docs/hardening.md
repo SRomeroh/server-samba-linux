@@ -28,3 +28,18 @@ Se implementó unattended-upgrades para que se actualicen automaticamente solo l
 * **Verficación:** El estado se puede monitorear desde 'apt-daily-upgrade.timer'.
 
 
+## Hardening Samba
+
+
+* **[Config Global]**
+disable_netbios = yes (Me aseguro que se desactive el protocolo netbios)
+server min protocol = SMB3_11 (Me aseguro que se use el protocolo mas moderno de samba)
+map to guest = never (No dejo que se acceda como usuario invitado/anonimo)
+smb encrypt = required (Fuerzo a que la comunicación esté siempre encriptada)
+
+
+* **Config [Compartido]** 
+valid user = @smb_access (Restringo solo el acceso a aquellos usuarios que pertenezcan al grupo creado **smb_access**)
+force group = smb_access (Fuerzo que el resto de operaciones hereden ese grupo)
+**Los usuarios pertenecientes a ese grupo solo tienen permiso de lectura/escritura**
+
