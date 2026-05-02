@@ -9,8 +9,8 @@ Se implementó UFW para gestionar el filtrado de paquetes. Se definió la politi
 * **Default Allow Outgoing:** Permite el trafico saliente desde la VM, necesario para que el sistema pueda descargar paquetes y actualizarse.
 
 
-* **Allow ssh (22/tcp):** Permite la conexión de mi maquina host a la VM por SSH.
-
+* **Allow ssh (22/tcp):** Permite la conexión de mi maquina host a la VM por SSH. **(Actualizado): Allow 2222/tcp"**
+* **Modificación:** Se cambió el puerto SSH de 22 a 2222. Esto para evitar que herramientas automatizadas intenten ataques de fuerza bruta de manera sencilla. Esto mejoraría en menos cantidad de logs y meno uso de recursos en el caso de un ataque ya que habría menor cantidad de intentos de conexión. 
 
 * **Allow Samba (445/tcp):** Opté por solo abrir el puerto 445 para el servicio samba y no el conjunto de puertos 137,139 para reducir la superficie de ataque y eliminar vulnerabilidades de protocolos heredados como NetBIOS.
 
