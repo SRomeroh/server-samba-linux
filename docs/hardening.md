@@ -43,3 +43,24 @@ valid user = @smb_access (Restringo solo el acceso a aquellos usuarios que perte
 force group = smb_access (Fuerzo que el resto de operaciones hereden ese grupo)
 **Los usuarios pertenecientes a ese grupo solo tienen permiso de lectura/escritura**
 
+
+## Fail2BAN
+Se implementó el servicio **Fail2ban** para prevenir ataques y acceso no autorizado al servidor. Además, al mitigar estos ataques también se reduce el consumo de recursos del servidor ya que al bloquear ips de atacantes el servidor no tiene que utilizar recursos para gestionar esas solicitudes.
+
+
+* ** Config(sshd)**
+Esta configuración se hizo, en primera instancia, en un archivo jail.conf
+
+enable = true: Permite que las reglas definidas especificamente para [sshd] se apliquen.
+
+port = 2222 - El puerto que asigné a el servicio sshd.
+
+findtime = 10 : Indica el tiempo en el que se observara los intentos.
+
+maxretry = 5: La cantidad de intentos permitidos que en conjunto con findtime revisan si se excedió.
+
+bantime = 45m: Se le da un baneo a la ip de 45 Minutos antes que pueda intentar loguearse nuevamente
+
+ignoreip = 10.0.2.2; la ip por la cual yo accede a la vm. Esto permite que por mas intentos fallidos que yo tenga no se me banea la ip.
+
+Todos los logs por el momento van a /var/log/fail2ban.log
